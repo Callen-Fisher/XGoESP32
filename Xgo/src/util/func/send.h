@@ -17,16 +17,16 @@ inline uint8_t sum(const uint8_t data) {
 
 // Compile-time frame/packet build/send
 template <typename ... Args> constexpr
-void send(Args ... args) {
+void send(uint8_t command_type, Args ... args) {
     const uint8_t data_count = sizeof... (Args);   // command, value
-    const uint8_t frame_count = data_count + 3;    // + checksum & length & random zero
+    const uint8_t frame_count = data_count + 3;    // + checksum & length & commandType
     const uint8_t packet_length = frame_count + 4; // + prefix & suffix
 
     /* frame: prefix, length, command, checksum, suffix */
     const uint8_t data[packet_length] = {
         0x55, 0x0,  // prefix
         packet_length,
-        0x00,
+        command_type,
         uint8_t(args)..., uint8_t(~sum(packet_length, args...)),
         0x00, 0xAA  // suffix
     };
