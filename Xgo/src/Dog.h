@@ -34,7 +34,7 @@ class Dog {
     }
     /*0x02*/ 
     Version::Version getVersion() {
-      send(00x00, x02);
+      send(0x00, 0x02);
       int value = Serial0.read();
 
       switch (value) {
