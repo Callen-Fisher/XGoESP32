@@ -2,6 +2,14 @@
 #include "Dog.h"
 //Ground pin 9 to programme 
 
+
+// modify Dog.h and Controller.h to have all the required functions from the register table
+// Add functions for reading all servo positions
+// Add functions for reading all foot positions
+// TEST sending foot positions
+// Need to calibrate the servos 
+
+
 Dog* dog = new Dog();
 
 void setup() {

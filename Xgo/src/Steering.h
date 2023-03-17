@@ -9,6 +9,6 @@ class Steering {
         void unmount();
 
         void reset() {
-            send(0x21, 0x01);
+            send(0x00, 0x21, 0x01);
         }
 };

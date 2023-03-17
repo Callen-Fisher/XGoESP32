@@ -29,11 +29,11 @@ class Leg {
 		void set(Axis::Axis axis, int value) {
 			switch (axis) {
 				case Axis::X:
-					send(x, value);
+					send(0x00, x, value);
 				case Axis::Y:
-					send(y, value);
+					send(0x00, y, value);
 				case Axis::Z:
-					send(z, value);
+					send(0x00, z, value);
 			}
 		}
 	private:

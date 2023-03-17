@@ -19,23 +19,22 @@ class Dog {
     		;
     	}
 
-
-      
-
-
     }
 
     // State information
-    /*0x00*/ int getMode() {
-      send(0x00);
+    /*0x00*/ 
+    int getMode() {
+      send(0x00, 0x00);
       return Serial0.read();
     }
-    /*0x01*/ int getBatteryLevel() {
-      send(0x01);
+    /*0x01*/ 
+    int getBatteryLevel() {
+      send(0x00, 0x01);
       return Serial0.read();
     }
-    /*0x02*/ Version::Version getVersion() {
-      send(0x02);
+    /*0x02*/ 
+    Version::Version getVersion() {
+      send(00x00, x02);
       int value = Serial0.read();
 
       switch (value) {
