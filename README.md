@@ -2,7 +2,7 @@
  
 - mention Stelltron Education, XGo mini and Elecfreaks
 - mention the code that I modified, reference in code and add a link here to their repository
-- mentio all the libraries I have used, neo, PS, Xgo 
+- mention all the libraries I have used, neo, PS, Xgo. IN THE CODE AS WELL
 
 
 
