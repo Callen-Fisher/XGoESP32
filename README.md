@@ -4,7 +4,7 @@ Robot: XGo Lite, purchased from Stelltron Education.
 
 Robot name: SAM (Stelltron Automated Mutt)
 
-Makes use of Serial0
+Makes use of Serial0 (this is defined at the top of send.h and xGo.h)
 
 Add ons:
 - Added a DF Robot Beetle ESP32 C3 - RISC-V which this code runs on, and sends commands to SAM.
@@ -32,8 +32,8 @@ Files that you need to include in your project:
 
 List of functions to use:
 - void stop_robot()                                                             :Tested and working
-- int getMode()                                                                 :NEED TO CODE
-- int getBatteryLevel()                                                         :NEED TO CODE
+- int getMode()                                                                 :Tested and working
+- int getBatteryLevel()                                                         :Tested and working 
 - Version::Version getVersion()                                                 :NEED TO CODE
 - void setPerformanceMode(Mode::Mode mode)                                      :Tested and working.
 - void unmount_all_motors()                                                     :NEED TO TEST
@@ -42,11 +42,11 @@ List of functions to use:
 - void rotate(Direction::Direction direction,int speed)                         :Tested and working. Speed 0-128;
 - void bodyShift(Direction::Direction direction, int value)                     :Tested and working. value 0-128;
 - void setBodyHeight(int height)                                                :Tested and working. Height 0-255;
-- int getBodyHeight()                                                           :NEED TO CODE
-- void adjustBodyHeight(int height)                                             :NEED TO CODE
+- int getBodyHeight()                                                           :Tested and working.
+- void adjustBodyHeight(int height)                                             :Tested and working. height 0-255;
 - void setMaxRotationAngle(Axis::Axis axis, int angle)                          :NEED TO TEST
 - void setSteppingHeight(int height)                                            :NEED TO TEST
-- void setMovingMode(Speed::Speed speed)                                        :NEED TO TEST
+- void setMovingMode(Speed::Speed speed)                                        :Tested and working.
 - void setAction(Action::Action action)                                         :Tested and working.
 - void setFootPosition(Limb::Limb limb,int x_pos, int y_pos, int z_pos)         :NEED TO TEST
 - void setServoPosition(Limb::Limb limb,int servo1, int servo2, int servo3)     :NEED TO TEST
@@ -54,15 +54,13 @@ List of functions to use:
 - int getIMUAngle(IMU::IMU axis)                                                :NEED TO CODE
 
 TODO:
-- make Serial0 user defined
 - include send.h into xGo class
 - calibration mode
 - bluetooth mode
 - reset zero position of servo
 - periodic body rotation
 - periodic body shift
-- get foot position
-- re-map all function values 
+- get foot position 
 - set servo position
 - set servo speed
 - standing postion 

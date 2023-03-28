@@ -2,11 +2,10 @@
 #pragma once
 #include "util/enum/xGo_names.h"
 #include "util/func/send.h"
+#define serial Serial0
 
 
-
-//ADD THE SEND AND RECEIVE FUNCTIONS HERE!!!
-//do the mapping for FWd/BWD etc so 0 is 0, not 128 is 0
+//ADD THE SEND AND RECEIVE FUNCTIONS HERE!!
 
 
 //two command types
@@ -17,8 +16,8 @@ class Dog{
     public: 
         void setup()
         {
-            Serial0.begin(baud_rate);
-            while(!Serial0);
+            serial.begin(baud_rate);
+            while(!serial);
         }
 
         //Stop the robot, all params return to default
@@ -33,14 +32,14 @@ class Dog{
         //0x00 Mode of operation (R)
         //state information mode
         int getMode() {
-            send(receive_command, 0x00);
+            send(receive_command, 0x00,0x01);
             return read_data();         
         }
         
         //0x01 Battery level (R)
         //0(min) to 100(max)
         int getBatteryLevel() {
-            send(receive_command, 0x01);
+            send(receive_command, 0x01,0x01);
             return read_data();       
         }
 
@@ -63,6 +62,7 @@ class Dog{
         }
         //0x03 Performance mode (W)
         //0x00 normal control, 0x01 cyclic action
+        //mode can be NORMAL or CYCLIC
         void setPerformanceMode(Mode::Mode mode) {
             switch (mode) {
                 case Mode::NORMAL:
@@ -98,6 +98,7 @@ class Dog{
         void unmount_all_motors(){
             send(send_command,0x20,0x01);
         }
+        //limb can be LEFT_FORE, RIGHT_FORE, RIGHT_REAR, LEFT_REAR
         void unmount_limb(Limb::Limb limb){
             switch (limb) {
                 case Limb::LEFT_FORE:
@@ -134,7 +135,8 @@ class Dog{
 
         //0x30 Forward/Backwards movement speed (RW)
         //0x31 left/right movement speed (RW)
-        //0 to 100, specify direction
+        //Speed: 0 to 128
+        //direction can be FORWARD, BACKWARD, LEFT or RIGHT
         //whole unit mode
         void walk(Direction::Direction direction, int speed) {
             int value;
@@ -157,7 +159,8 @@ class Dog{
             
         }
         //0x32 CW/CCW rotation speed (RW)                                 
-        //128 is no vel, map to CW and CCW
+        //Speed: 0-128
+        //direction can be CW or CCW
         void rotate(Direction::Direction direction,int speed) {
             switch(direction)
             {
@@ -172,6 +175,8 @@ class Dog{
 
         //0x33 Body shift X (RW)
         //0x34 Body shift Y (RW)
+        //value: 0->128
+        //direction can be FORWARD, BACKWARD, LEFT or RIGHT
         void bodyShift(Direction::Direction direction, int value) {
             switch(direction){
                 case Direction::FORWARD:
@@ -190,15 +195,24 @@ class Dog{
         }
 
         //0x35 Body height (RW)
+        //height 0->255
         void setBodyHeight(int height) {
             send(send_command, 0x35, height); 
         }
         int getBodyHeight(){
-            send(receive_command, 0x35);
+            send(receive_command, 0x35,0x01);
             return read_data();                     
         }
+        //height can be added/subtracted from the current height.
+        //ranges from 0->255
         void adjustBodyHeight(int height){
-            send(send_command,0x35,height+getBodyHeight());
+            int temp=height+getBodyHeight();
+            if(temp>255){
+                temp=255;
+            }else if(temp<0){
+                temp=0;
+            }
+            send(send_command,0x35,temp);
         }
 
         //0x36 Body rotate about X (RW)
@@ -243,6 +257,7 @@ class Dog{
 
         //0x3D moving mode (RW)
         //0x00 normal, 0x01 slow, 0x02 high speed
+        //speed can be NORMAL, SLOW or FAST
         void setMovingMode(Speed::Speed speed) {
             switch (speed) {
                 case Speed::NORMAL:
@@ -261,6 +276,7 @@ class Dog{
 
         //0x3E action (W)
         //list of action commands
+        //Look at xGo_names.h for a list of actions. 
         void setAction(Action::Action action) {
             switch (action) {
                 case Action::NONE:
@@ -405,6 +421,8 @@ class Dog{
 
         //0x61 IMU state (RW) 
         //0x00 close, 0x01 self-stabilizing mode
+        //val=true: stabilize with IMU
+        //val=false: no stabilization
         void IMU_stabilize(bool val){
             if(val){
                 send(send_command,0x61,0x01);
@@ -445,12 +463,30 @@ class Dog{
         }
         int read_data()
         {
+            //TODO-> will only work for functions returning 1 byte, 
+            //add a timer to kick out if it gets stuck and misses comms
+            while(serial.available()==0);
+            byte packetStart=serial.read();
+            if(packetStart!=0x55){return 0;}
+            while(serial.available()==0);
+            packetStart=serial.read();
+            if(packetStart!=0x00){return 0;}
+            while(serial.available()==0);
+            byte frameLength=serial.read();
+            while(serial.available()==0);
+            byte commandType=serial.read();
+            while(serial.available()==0);
+            byte firstAddress=serial.read();
+            while(serial.available()==0);
+            byte data=serial.read();
+            while(serial.available()==0);
+            byte checkSum=serial.read();
+            while(serial.available()==0);
+            byte packetEnd=serial.read();
+            while(serial.available()==0);
+            packetEnd=serial.read();
 
-            //TODO
-
-
-
-            return 0;
+            return data;
         }
         void set(Axis::Axis axis, int value) {
 			switch (axis) {

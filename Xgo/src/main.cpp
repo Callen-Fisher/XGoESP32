@@ -17,28 +17,34 @@ void setup() {
   dog->setup();
   digitalWrite(LED,LOW);
   
-  dog->setBodyHeight(20);
+
+
   colorWipe(strip.Color(0, 0, 255), 1); 
-  delay(1000);
+  delay(100);
+  int temp=dog->getBatteryLevel();
+  colorWipe(strip.Color(temp, 0, 0), 1); 
 
-  
-  dog->setPerformanceMode(Mode::NORMAL);
 
-  dog->IMU_stabilize(1);
-  dog->walk(Direction::FORWARD, 50);
-  delay(1000);
+  //dog->setBodyHeight(20);
+  //
+  //delay(1000);
 
-  dog->IMU_stabilize(1);
-  dog->walk(Direction::FORWARD, 50);
-  delay(1000);
 
-  dog->IMU_stabilize(1);
-  dog->walk(Direction::FORWARD, 50);
-  delay(1000);
+  //dog->IMU_stabilize(1);
+  //dog->walk(Direction::FORWARD, 50);
+  //delay(1000);
 
-  dog->IMU_stabilize(1);
-  dog->walk(Direction::FORWARD, 50);
-  delay(1000);
+  //dog->IMU_stabilize(1);
+  //dog->walk(Direction::FORWARD, 50);
+  //delay(1000);
+
+  //dog->IMU_stabilize(1);
+  //dog->walk(Direction::FORWARD, 50);
+  //delay(1000);
+
+  //dog->IMU_stabilize(1);
+  //dog->walk(Direction::FORWARD, 50);
+  //delay(1000);
 
   dog->stop_robot();
 }
