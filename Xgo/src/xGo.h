@@ -1,3 +1,4 @@
+//Code modified from https://github.com/DeflatedPickle/xgo/tree/2eb56ac9d3cce067436461d3ea573ca003f76b67
 #pragma once
 #include "util/enum/xGo_names.h"
 #include "util/func/send.h"
@@ -22,9 +23,9 @@ class Dog{
 
         //Stop the robot, all params return to default
         void stop_robot(){
-            walk(Axis::X,Direction::FORWARD,0);
-            walk(Axis::Y,Direction::LEFT,0);
-            rotate(0);
+            walk(Direction::FORWARD,0);
+            walk(Direction::LEFT,0);
+            rotate(Direction::CW,0);
             setSteppingHeight(0);
             send(send_command, 0x3E, 255);//send action 255. Not sure if correct
         }
@@ -66,8 +67,10 @@ class Dog{
             switch (mode) {
                 case Mode::NORMAL:
                     send(send_command, 0x03, 0x00);
+                    break;
                 case Mode::CYCLIC:
                     send(send_command, 0x03, 0x01);
+                    break;
             }
         }
 
@@ -99,12 +102,16 @@ class Dog{
             switch (limb) {
                 case Limb::LEFT_FORE:
                     send(send_command, 0x20, 0x11);
+                    break;
                 case Limb::RIGHT_FORE:
                     send(send_command, 0x20, 0x12);
+                    break;
                 case Limb::RIGHT_REAR:
                     send(send_command, 0x20, 0x13);
+                    break;
                 case Limb::LEFT_REAR:
                     send(send_command, 0x20, 0x14);
+                    break;
                 default:
                     return;
             }
@@ -129,51 +136,62 @@ class Dog{
         //0x31 left/right movement speed (RW)
         //0 to 100, specify direction
         //whole unit mode
-        void walk(Axis::Axis axis, Direction::Direction direction, int speed) {
+        void walk(Direction::Direction direction, int speed) {
             int value;
             switch (direction) {
                 case Direction::FORWARD:
-                    value = remap(speed, 0, 100, 128, 255);
+                    send(send_command, 0x30, speed+128);
+                    break;
                 case Direction::BACKWARD:
-                    value = remap(speed, 0, 100, 128, 0);
+                    send(send_command, 0x30, 128-speed);
+                    break;
                 case Direction::LEFT:
-                    value = remap(speed, 0, 100, 128, 255);
+                    send(send_command, 0x31, speed+128);
+                    break;
                 case Direction::RIGHT:
-                    value = remap(speed, 0, 100, 128, 0);
+                    send(send_command, 0x31, 128-speed);
+                    break;
                 default:
                     return;
             }
-            switch (axis) {
-                case Axis::X:
-                    send(send_command, 0x30, value);
-                case Axis::Y:
-                    send(send_command, 0x31, value);
-                default:
-                    return;
-            }
+            
         }
         //0x32 CW/CCW rotation speed (RW)                                 
         //128 is no vel, map to CW and CCW
-        void rotate(int speed) {
-            send(send_command, 0x32, speed);             //TODO split this into CCW and CW
+        void rotate(Direction::Direction direction,int speed) {
+            switch(direction)
+            {
+                case Direction::CW:
+                    send(send_command, 0x32, 128-speed); 
+                    break;
+                case Direction::CCW:
+                    send(send_command, 0x32, 128+speed); 
+                    break;
+            }
         }
 
         //0x33 Body shift X (RW)
         //0x34 Body shift Y (RW)
-        void bodyShift(Axis::Axis axis, int value) {
-            switch (axis) {
-                case Axis::X:
-                    send(send_command, 0x33, value);
-                case Axis::Y:
-                    send(send_command, 0x34, value);
-                default:
-                    return;
+        void bodyShift(Direction::Direction direction, int value) {
+            switch(direction){
+                case Direction::FORWARD:
+                    send(send_command, 0x33, 128+value);
+                    break;
+                case Direction::BACKWARD:
+                    send(send_command, 0x33, 128-value);
+                    break;
+                case Direction::LEFT:
+                    send(send_command, 0x34, 128+value);
+                    break;
+                case Direction::RIGHT:
+                    send(send_command, 0x34, 128-value);
+                    break; 
             }
         }
 
         //0x35 Body height (RW)
         void setBodyHeight(int height) {
-            send(send_command, 0x35, height);
+            send(send_command, 0x35, height); 
         }
         int getBodyHeight(){
             send(receive_command, 0x35);
@@ -190,10 +208,13 @@ class Dog{
             switch (axis) {
                 case Axis::X:
                     send(send_command, 0x36, angle);
+                    break;
                 case Axis::Y:
                     send(send_command, 0x37, angle);
+                    break;
                 case Axis::Z:
                     send(send_command, 0x38, angle);
+                    break;
             }
         }
 
@@ -226,10 +247,13 @@ class Dog{
             switch (speed) {
                 case Speed::NORMAL:
                     send(send_command, 0x3D, 0x00);
+                    break;
                 case Speed::SLOW:
                     send(send_command, 0x3D, 0x01);
+                    break;
                 case Speed::FAST:
                     send(send_command, 0x3D, 0x02);
+                    break;
                 default:
                     return;
             }
@@ -241,42 +265,61 @@ class Dog{
             switch (action) {
                 case Action::NONE:
                     send(send_command, 0x3E, 0);
+                    break;
                 case Action::LIE:
                     send(send_command, 0x3E, 1);
+                    break;
                 case Action::STAND:
                     send(send_command, 0x3E, 2);
+                    break;
                 case Action::CREEP:
                     send(send_command, 0x3E, 3);
+                    break;
                 case Action::CIRCLE:
                     send(send_command, 0x3E, 4);
+                    break;
                 case Action::STEP:
                     send(send_command, 0x3E, 5);
+                    break;
                 case Action::SQUAT:
                     send(send_command, 0x3E, 6);
+                    break;
                 case Action::ROLL:
                     send(send_command, 0x3E, 7);
+                    break;
                 case Action::PITCH:
                     send(send_command, 0x3E, 8);
+                    break;
                 case Action::YAWN:
                     send(send_command, 0x3E, 9);
+                    break;
                 case Action::JIGGLE:
                     send(send_command, 0x3E, 10);
+                    break;
                 case Action::PEE:
                     send(send_command, 0x3E, 11);
+                    break;
                 case Action::SIT:
                     send(send_command, 0x3E, 12);
+                    break;
                 case Action::BECKON:
                     send(send_command, 0x3E, 13);
+                    break;
                 case Action::STRETCH:
                     send(send_command, 0x3E, 14);
+                    break;
                 case Action::WAVE:
                     send(send_command, 0x3E, 15);
+                    break;
                 case Action::SWAY:
                     send(send_command, 0x3E, 16);
+                    break;
                 case Action::BEG:
                     send(send_command, 0x3E, 17);
+                    break;
                 case Action::SEARCH:
                     send(send_command, 0x3E, 18);
+                    break;
                 default:
                     return;
             }
@@ -377,10 +420,13 @@ class Dog{
             switch (axis){
                 case IMU::ROLL:
                     send(receive_command,0x62);
+                    break;
                 case IMU::PITCH:
                     send(receive_command,0x63);
+                    break;
                 case IMU::YAW:
                     send(receive_command,0x64);
+                    break;
                 default:
                     return -1;
             }
@@ -395,7 +441,7 @@ class Dog{
 		int y;
 		int z;
         int remap(int value,int oldLow,int oldHigh,int newLow,int newHigh) {
-            return newLow + (value - oldLow) * (newHigh - newLow) / (oldHigh - oldLow);
+            return 0;
         }
         int read_data()
         {
@@ -410,10 +456,13 @@ class Dog{
 			switch (axis) {
 				case Axis::X:
 					send(send_command, x, value);
+                    break;
 				case Axis::Y:
 					send(send_command, y, value);
+                    break;
 				case Axis::Z:
 					send(send_command, z, value);
+                    break;
 			}
 		}
         //sets the address for the relevant positions for the specified limb
@@ -424,18 +473,22 @@ class Dog{
 					x = 0x40;
 					y = 0x41;
 					z = 0x42;
+                    break;
 				case Limb::RIGHT_FORE:
 					x = 0x43;
 					y = 0x44;
 					z = 0x45;
+                    break;
 				case Limb::RIGHT_REAR:
 					x = 0x46;
 					y = 0x47;
 					z = 0x48;
+                    break;
 				case Limb::LEFT_REAR:
 					x = 0x49;
 					y = 0x4A;
 					z = 0x4B;
+                    break;
 			}
 		}
         //sets the address for the relevant servos for the specified limb
@@ -446,18 +499,22 @@ class Dog{
 					x = 0x50;
 					y = 0x51;
 					z = 0x52;
+                    break;
 				case Limb::RIGHT_FORE:
 					x = 0x53;
 					y = 0x54;
 					z = 0x55;
+                    break;
 				case Limb::RIGHT_REAR:
 					x = 0x56;
 					y = 0x57;
 					z = 0x58;
+                    break;
 				case Limb::LEFT_REAR:
 					x = 0x59;
 					y = 0x5A;
 					z = 0x5B;
+                    break;
 			}
 		}
 };

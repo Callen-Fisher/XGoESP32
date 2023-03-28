@@ -1,60 +1,15 @@
 #include <Arduino.h>
-//#include "Dog.h"
 #include "xGo.h"
 #include "Neo.h"
-
 
 #define LED 10
 //Ground pin 9 to programme 
 
-
-
-
-
-// TEST sending foot positions
-// Need to calibrate the servos 
-// playstation remote
-// add acknowledgements to code I used 
-// compare to Python code
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Dog* dog = new Dog();
-//Leg* left_fore_leg = new Leg(Limb::LEFT_FORE);
-//Leg* right_fore_leg = new Leg(Limb::RIGHT_FORE);
-//Leg* right_rear_leg = new Leg(Limb::RIGHT_REAR);
-//Leg* left_rear_leg = new Leg(Limb::LEFT_REAR);
 
 void setup() {
-  delay(1000);
+  delay(100);
   pinMode(LED,OUTPUT);
-
-
-
- 
-
-  
-
-
-
-
-
 
   setup_neo();
 
@@ -62,24 +17,43 @@ void setup() {
   dog->setup();
   digitalWrite(LED,LOW);
   
-  //delay(10000);
-  //dog->controller->setBodyHeight(80);
-  //delay(1000);
-  //dog->controller->walk(Axis::X,Direction::FORWARD, 80); //speed of 0 to 100
-  //delay(10000);
-  //dog->controller->walk(Axis::X,Direction::FORWARD, 0); //speed of 0 to 100
-  //delay(1000);
-
-}
-
-void loop() {
-  digitalWrite(LED,HIGH);
-  delay(1000);
-  digitalWrite(LED,LOW);
+  dog->setBodyHeight(20);
+  colorWipe(strip.Color(0, 0, 255), 1); 
   delay(1000);
 
   
+  dog->setPerformanceMode(Mode::NORMAL);
 
+  dog->IMU_stabilize(1);
+  dog->walk(Direction::FORWARD, 50);
+  delay(1000);
+
+  dog->IMU_stabilize(1);
+  dog->walk(Direction::FORWARD, 50);
+  delay(1000);
+
+  dog->IMU_stabilize(1);
+  dog->walk(Direction::FORWARD, 50);
+  delay(1000);
+
+  dog->IMU_stabilize(1);
+  dog->walk(Direction::FORWARD, 50);
+  delay(1000);
+
+  dog->stop_robot();
+}
+
+void loop() {
+  
+  
+  //dog->walk(Direction::BACKWARD,50);
+  //delay(1000);
+  //dog->walk(Direction::LEFT,50);
+  //delay(1000);
+  //dog->walk(Direction::RIGHT,50);
+  //delay(1000);
+  //dog->stop_robot();
+  //delay(1000);
 }
 
 

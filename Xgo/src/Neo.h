@@ -3,6 +3,8 @@
 #include <Adafruit_NeoPixel.h>
 #define PIN 2
 
+//code modified from Adafruit NeoPixel example strandtest_wheel
+
 Adafruit_NeoPixel strip;
 
 
