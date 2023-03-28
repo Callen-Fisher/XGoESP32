@@ -1,7 +1,9 @@
 # XGoESP32
  
 Robot: XGo Lite, purchased from Stelltron Education. 
+
 Robot name: SAM (Stelltron Automated Mutt)
+
 Makes use of Serial0
 
 Add ons:
@@ -64,3 +66,6 @@ TODO:
 - set servo position
 - set servo speed
 - standing postion 
+
+
+<img src="SAM_image.jpg">
