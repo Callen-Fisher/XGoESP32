@@ -31,10 +31,10 @@ Files that you need to include in your project:
 - util/enum/send.h
 
 List of functions to use:
-- void stop_robot()                                                             :Tested and working
-- int getMode()                                                                 :Tested and working
-- int getBatteryLevel()                                                         :Tested and working 
-- Version::Version getVersion()                                                 :NEED TO CODE
+- void stop_robot()                                                             :Tested and working.
+- int getMode()                                                                 :Tested and working.
+- int getBatteryLevel()                                                         :Tested and working.
+- Version::Version getVersion()                                                 :Tested and working.
 - void setPerformanceMode(Mode::Mode mode)                                      :Tested and working.
 - void unmount_all_motors()                                                     :NEED TO TEST
 - void unmount_limb(Limb::Limb limb)                                            :NEED TO TEST
@@ -51,7 +51,7 @@ List of functions to use:
 - void setFootPosition(Limb::Limb limb,int x_pos, int y_pos, int z_pos)         :NEED TO TEST
 - void setServoPosition(Limb::Limb limb,int servo1, int servo2, int servo3)     :NEED TO TEST
 - void IMU_stabilize(bool val)                                                  :Tested and working. 
-- int getIMUAngle(IMU::IMU axis)                                                :NEED TO CODE
+- int getIMUAngle(IMU::IMU axis)                                                :NEED TO TEST
 
 TODO:
 - include send.h into xGo class

@@ -46,7 +46,7 @@ class Dog{
         //0x02 XGO version (R)
         //0x00 Mini, 0x01 Lite, 0x02 Pro
         Version::Version getVersion() {
-            send(receive_command, 0x02);
+            send(receive_command, 0x02,0x01);
             int value = read_data();      
 
             switch (value) {
@@ -437,13 +437,13 @@ class Dog{
         int getIMUAngle(IMU::IMU axis){
             switch (axis){
                 case IMU::ROLL:
-                    send(receive_command,0x62);
+                    send(receive_command,0x62,0x01);
                     break;
                 case IMU::PITCH:
-                    send(receive_command,0x63);
+                    send(receive_command,0x63,0x01);
                     break;
                 case IMU::YAW:
-                    send(receive_command,0x64);
+                    send(receive_command,0x64,0x01);
                     break;
                 default:
                     return -1;
@@ -463,30 +463,62 @@ class Dog{
         }
         int read_data()
         {
-            //TODO-> will only work for functions returning 1 byte, 
+            //will only work for functions returning 1 byte
             //add a timer to kick out if it gets stuck and misses comms
             while(serial.available()==0);
-            byte packetStart=serial.read();
+            int packetStart=serial.read();
             if(packetStart!=0x55){return 0;}
             while(serial.available()==0);
             packetStart=serial.read();
             if(packetStart!=0x00){return 0;}
             while(serial.available()==0);
-            byte frameLength=serial.read();
+            int frameLength=serial.read()-8;
             while(serial.available()==0);
-            byte commandType=serial.read();
+            int commandType=serial.read();
             while(serial.available()==0);
-            byte firstAddress=serial.read();
+            int firstAddress=serial.read();
+            //should loop through data here
             while(serial.available()==0);
-            byte data=serial.read();
+            int data=serial.read();
             while(serial.available()==0);
-            byte checkSum=serial.read();
+            int checkSum=serial.read();
             while(serial.available()==0);
-            byte packetEnd=serial.read();
+            int packetEnd=serial.read();
             while(serial.available()==0);
             packetEnd=serial.read();
 
             return data;
+        }
+        int read_array(int *array)
+        {
+            //works for multiple values
+            //add a timer to kick out if it gets stuck and misses comms
+            while(serial.available()==0);
+            int packetStart=serial.read();
+            if(packetStart!=0x55){return 0;}
+            while(serial.available()==0);
+            packetStart=serial.read();
+            if(packetStart!=0x00){return 0;}
+            while(serial.available()==0);
+            int frameLength=serial.read()-8;
+            while(serial.available()==0);
+            int commandType=serial.read();
+            while(serial.available()==0);
+            int firstAddress=serial.read();
+            //should loop through data here
+            int i=0;
+            for(i=0;i<frameLength;i++)
+            {
+                while(serial.available()==0);
+                array[i]=serial.read();
+            }
+            while(serial.available()==0);
+            int checkSum=serial.read();
+            while(serial.available()==0);
+            int packetEnd=serial.read();
+            while(serial.available()==0);
+            packetEnd=serial.read();
+            return 1;
         }
         void set(Axis::Axis axis, int value) {
 			switch (axis) {
