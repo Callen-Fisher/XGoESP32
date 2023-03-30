@@ -52,18 +52,16 @@ List of functions to use:
 - void setServoPosition(Limb::Limb limb,int servo1, int servo2, int servo3)     :NEED TO TEST
 - void IMU_stabilize(bool val)                                                  :Tested and working. 
 - int getIMUAngle(IMU::IMU axis)                                                :NEED TO TEST
+- void setBodyRotation(Axis::Axis axis, int period)                             :NEED TO TEST
+- int getBodyRotation(Axis::Axis axis)                                          :NEED TO TEST 
+- int getSteppingHeight()                                                       :NEED TO TEST
+- void stopBodyRotation()                                                       :NEED TO TEST
+- void getFootPosition(Limb::Limb limb,int *x_pos, int *y_pos, int *z_pos)      :NEED TO TEST
+- void getServoPosition(Limb::Limb limb,int *servo1, int *servo2, int *servo3)  :NEED TO TEST
+- void stand()                                                                  :NEED TO TEST               
 
 TODO:
 - include send.h into xGo class
-- calibration mode
-- bluetooth mode
-- reset zero position of servo
-- periodic body rotation
-- periodic body shift
-- get foot position 
-- set servo position
-- set servo speed
-- standing postion 
 
 
 <img src="SAM_image.jpg">

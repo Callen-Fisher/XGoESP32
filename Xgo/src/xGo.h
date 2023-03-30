@@ -4,10 +4,6 @@
 #include "util/func/send.h"
 #define serial Serial0
 
-
-//ADD THE SEND AND RECEIVE FUNCTIONS HERE!!
-
-
 //two command types
 int send_command=0x00;// no data returned
 int receive_command=0x02;// data returned 
@@ -236,23 +232,47 @@ class Dog{
         //0x3A A given period in which body rotates around Y (RW)
         //0x3B A given period in which body rotates around Z (RW)
         //0x00 stops, 0x01-0xff min-max rotation speed
-
-
-
-
-
-
-        
-        
-
-
-
-
+        void setBodyRotation(Axis::Axis axis, int period) {
+            switch (axis) {
+                case Axis::X:
+                    send(send_command, 0x39, period);
+                    break;
+                case Axis::Y:
+                    send(send_command, 0x3A, period);
+                    break;
+                case Axis::Z:
+                    send(send_command, 0x3B, period);
+                    break;
+            }
+        }
+        int getBodyRotation(Axis::Axis axis) {
+            switch (axis) {
+                case Axis::X:
+                    send(receive_command, 0x39, 0x01);
+                    break;
+                case Axis::Y:
+                    send(receive_command, 0x3A, 0x01);
+                    break;
+                case Axis::Z:
+                    send(receive_command, 0x3B, 0x01);
+                    break;
+            }
+            return read_data();  
+        }
+        void stopBodyRotation(){
+            send(send_command, 0x39, 0);
+            send(send_command, 0x3A, 0);
+            send(send_command, 0x3B, 0);
+        }
 
         //0x3C mark time (RW)
         //0x00 stop, 0x01-0xff min-max mark time height
         void setSteppingHeight(int height) {
             send(send_command, 0x3C, height);
+        }
+        int getSteppingHeight(){
+            send(receive_command, 0x3C, 0x01);
+            return read_data();
         }
 
         //0x3D moving mode (RW)
@@ -341,29 +361,42 @@ class Dog{
             }
         }
 
-        
-
         //0x80 a given period in which the body shifts along X axis (RW)
         //0x81 a given period in which the body shifts along Y axis (RW)
         //0x82 a given period in which the body shifts along Z axis (RW)
         //0x00 stop, 0x01 to 0xff min/max shift speed
-
-
-
-
-
-
-        
-
-
-
-
-
-        
-
-
-
-
+        void setBodyShift(Axis::Axis axis, int period) {
+            switch (axis) {
+                case Axis::X:
+                    send(send_command, 0x80, period);
+                    break;
+                case Axis::Y:
+                    send(send_command, 0x81, period);
+                    break;
+                case Axis::Z:
+                    send(send_command, 0x82, period);
+                    break;
+            }
+        }
+        int getBodyShift(Axis::Axis axis) {
+            switch (axis) {
+                case Axis::X:
+                    send(receive_command, 0x80, 0x01);
+                    break;
+                case Axis::Y:
+                    send(receive_command, 0x81, 0x01);
+                    break;
+                case Axis::Z:
+                    send(receive_command, 0x82, 0x01);
+                    break;
+            }
+            return read_data();  
+        }
+        void stopBodyShift(){
+            send(send_command, 0x80, 0);
+            send(send_command, 0x81, 0);
+            send(send_command, 0x82, 0);
+        }
 
         //0x40 to 0x4B leg positon (RW)
         //leg mode
@@ -371,21 +404,14 @@ class Dog{
             foot_position_address(limb);
             set(Axis::X, x_pos);
             set(Axis::Y, y_pos);
-            set(Axis::Z, z_pos);
+            set(Axis::Z, z_pos);//CAN DO THIS WITH WRITE ARRAY
         }
-
-
-
-        //TODO GET FOOT POSITION
-    
-    
-
-
-
-
-
-
-
+        void getFootPosition(Limb::Limb limb,int *x_pos, int *y_pos, int *z_pos){
+            foot_position_address(limb);
+            *x_pos=get(Axis::X);
+            *y_pos=get(Axis::Y);
+            *z_pos=get(Axis::Z);//CAN DO THIS WITH READ ARRAY
+        }
 
         //0x50 to 0x5B servo position (RW)
         //servo mode
@@ -393,18 +419,14 @@ class Dog{
             servo_address(limb);
             set(Axis::X, servo1);
             set(Axis::Y, servo2);
-            set(Axis::Z, servo3);
+            set(Axis::Z, servo3);//CAN DO THIS WITH WRITE ARRAY
         }
-
-
-
-        //TODO GET SERVO POSITION
-    
-
-
-
-
-
+        void getServoPosition(Limb::Limb limb,int *servo1, int *servo2, int *servo3){
+            servo_address(limb);
+            *servo1=get(Axis::X);
+            *servo2=get(Axis::Y);
+            *servo3=get(Axis::Z);//CAN DO THIS WITH READ ARRAY
+        }
 
         //0x5C servo speed (RW)
         //0x00 to 0xff min-max value. Only applicable under this mode
@@ -415,10 +437,9 @@ class Dog{
 
         //0x5D standing posture (W) 
         //0x00 inactive, 0x01 returns to standing position
-
-
-
-
+        void stand(){
+            send(send_command, 0x5D, 0x01);
+        }
         //0x61 IMU state (RW) 
         //0x00 close, 0x01 self-stabilizing mode
         //val=true: stabilize with IMU
@@ -532,6 +553,20 @@ class Dog{
 					send(send_command, z, value);
                     break;
 			}
+		}
+        int get(Axis::Axis axis) {
+			switch (axis) {
+				case Axis::X:
+					send(receive_command, x, 0x01);
+                    break;
+				case Axis::Y:
+					send(receive_command, y, 0x01);
+                    break;
+				case Axis::Z:
+					send(receive_command, z, 0x01);
+                    break;
+			}
+            return read_data();
 		}
         //sets the address for the relevant positions for the specified limb
         void foot_position_address(Limb::Limb limb) 
