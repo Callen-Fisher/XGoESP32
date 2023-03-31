@@ -70,20 +70,7 @@ class Dog{
             }
         }
 
-        //0x04 Calibration mode (W) 
-        //0x01 enter calibration mode, 0x00 exit calibration mode
-                                                     //TODO        not sure what to write here
         
-
-
-
-
-        //0x13 Bluetooth (W) 
-        //length of name is 10 bytes, after naming its XGO_xxxxx
-                                                    //TODO         not sure what to write here
-
-
-
 
 
 
@@ -120,8 +107,7 @@ class Dog{
 
 
 
-        //0x21 Reset zero position of servo (W)
-        //0x00 servo normal, 0x01 record the current position as zero position. 
+        
 
 
 
@@ -430,11 +416,21 @@ class Dog{
 
         //0x5C servo speed (RW)
         //0x00 to 0xff min-max value. Only applicable under this mode
-
-
-
-
-
+        void setServoSpeed(Limb::Limb limb,int servo,int speed){
+            servo_address(limb);
+            switch(servo){
+                case 1:
+                    send(send_command, 0x5C, x ,speed);
+                    break;
+                case 2:
+                    send(send_command, 0x5C, y, speed);
+                    break;
+                case 3:
+                    send(send_command, 0x5C, z, speed);
+                    break;
+            }
+            
+        }
         //0x5D standing posture (W) 
         //0x00 inactive, 0x01 returns to standing position
         void stand(){

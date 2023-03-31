@@ -59,6 +59,12 @@ List of functions to use:
 - void getFootPosition(Limb::Limb limb,int *x_pos, int *y_pos, int *z_pos)      :NEED TO TEST
 - void getServoPosition(Limb::Limb limb,int *servo1, int *servo2, int *servo3)  :NEED TO TEST
 - void stand()                                                                  :NEED TO TEST               
+- void setServoSpeed(Limb::Limb limb,int servo,int speed)                       :NEED TO TEST
+
+Things not coded (suggest using the XGo app to modify these):
+- 0x04 Calibration mode (W) 
+- 0x13 Bluetooth (W) 
+- 0x21 Reset zero position of servo (W)
 
 TODO:
 - include send.h into xGo class
