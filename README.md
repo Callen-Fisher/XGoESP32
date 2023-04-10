@@ -31,35 +31,35 @@ Files that you need to include in your project:
 - util/enum/send.h
 
 List of functions to use:
-- void stop_robot()                                                             :Tested and working.
-- int getMode()                                                                 :Tested and working.
-- int getBatteryLevel()                                                         :Tested and working.
-- Version::Version getVersion()                                                 :Tested and working.
-- void setPerformanceMode(Mode::Mode mode)                                      :Tested and working.
+- void stop_robot()                                                           
+- int getMode()                                                                
+- int getBatteryLevel()                                                        
+- Version::Version getVersion()                                                 
+- void setPerformanceMode(Mode::Mode mode)                                      
 - void unmount_all_motors()                                                     :NEED TO TEST
 - void unmount_limb(Limb::Limb limb)                                            :NEED TO TEST
-- void walk(Direction::Direction direction, int speed)                          :Tested and working. Speed 0-128;
-- void rotate(Direction::Direction direction,int speed)                         :Tested and working. Speed 0-128;
-- void bodyShift(Direction::Direction direction, int value)                     :Tested and working. value 0-128;
-- void setBodyHeight(int height)                                                :Tested and working. Height 0-255;
-- int getBodyHeight()                                                           :Tested and working.
-- void adjustBodyHeight(int height)                                             :Tested and working. height 0-255;
+- void walk(Direction::Direction direction, int speed)                          ; Speed 0-128;
+- void rotate(Direction::Direction direction,int speed)                         ; Speed 0-128;
+- void bodyShift(Direction::Direction direction, int value)                     ; value 0-128;
+- void setBodyHeight(int height)                                                ; Height 0-255;
+- int getBodyHeight()                                                           
+- void adjustBodyHeight(int height)                                             ; height 0-255;
 - void setMaxRotationAngle(Axis::Axis axis, int angle)                          :NEED TO TEST
 - void setSteppingHeight(int height)                                            :NEED TO TEST
-- void setMovingMode(Speed::Speed speed)                                        :Tested and working.
-- void setAction(Action::Action action)                                         :Tested and working.
+- void setMovingMode(Speed::Speed speed)                                        
+- void setAction(Action::Action action)                                         
 - void setFootPosition(Limb::Limb limb,int x_pos, int y_pos, int z_pos)         :NEED TO TEST
 - void setServoPosition(Limb::Limb limb,int servo1, int servo2, int servo3)     :NEED TO TEST
-- void IMU_stabilize(bool val)                                                  :Tested and working. 
-- int getIMUAngle(IMU::IMU axis)                                                :NEED TO TEST
+- void IMU_stabilize(bool val)                                                   
+- int getIMUAngle(IMU::IMU axis)                                                
 - void setBodyRotation(Axis::Axis axis, int period)                             :NEED TO TEST
-- int getBodyRotation(Axis::Axis axis)                                          :NEED TO TEST 
-- int getSteppingHeight()                                                       :NEED TO TEST
+- int getBodyRotation(Axis::Axis axis)                                           
+- int getSteppingHeight()                                                       
 - void stopBodyRotation()                                                       :NEED TO TEST
 - void getFootPosition(Limb::Limb limb,int *x_pos, int *y_pos, int *z_pos)      :NEED TO TEST
 - void getServoPosition(Limb::Limb limb,int *servo1, int *servo2, int *servo3)  :NEED TO TEST
-- void stand()                                                                  :NEED TO TEST               
-- void setServoSpeed(Limb::Limb limb,int servo,int speed)                       :NEED TO TEST
+- void stand()                                                                               
+- void setServoSpeed(Limb::Limb limb,int servo,int speed)                       
 
 Things not coded (suggest using the XGo app to modify these):
 - 0x04 Calibration mode (W) 
