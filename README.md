@@ -70,4 +70,4 @@ TODO:
 - include send.h into xGo class
 
 
-<img src="SAM_image.jpg">
+<img src="SAM_image.jpeg">
