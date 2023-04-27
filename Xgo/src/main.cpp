@@ -4,7 +4,9 @@
 
 #define LED 10
 //Ground pin 9 to programme 
-
+int arrX[]={200,200,150,100,50,0,0,0,50,100,150,200};
+int arrZ[]={25,50,50,50,50,50,25,0,0,0,0,0};
+int arrY[]={100,100,100,100,100,100,100,100,100,100,100,100};
 Dog* dog = new Dog();
 
 void setup() {
@@ -21,8 +23,7 @@ void setup() {
 
   colorWipe(strip.Color(0, 0, 255), 1); 
   delay(100);
-  int temp=dog->getBatteryLevel();
-  colorWipe(strip.Color(temp, 0, 0), 1); 
+  
 
 
   //dog->setBodyHeight(20);
@@ -51,15 +52,20 @@ void setup() {
 
 void loop() {
   
+  int temp=dog->getBatteryLevel();
+  colorWipe(strip.Color(temp, 0, 0), 1); 
+
+
+
+  dog->customGait(80,12,arrX,arrY,arrZ);
+
+    
   
-  //dog->walk(Direction::BACKWARD,50);
-  //delay(1000);
-  //dog->walk(Direction::LEFT,50);
-  //delay(1000);
-  //dog->walk(Direction::RIGHT,50);
-  //delay(1000);
-  //dog->stop_robot();
-  //delay(1000);
+  
+  
+  
+  
+  
 }
 
 

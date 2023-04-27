@@ -70,11 +70,6 @@ class Dog{
             }
         }
 
-        
-
-
-
-
         //0x20 Unmount servo (RW)
         //0x00 normal operation, 0x01 unmount all, 0x11-0x14 unmount legs 1-4 in order, 0x21-0x24 remount legs 1-4
         //debug mode
@@ -100,20 +95,6 @@ class Dog{
                     return;
             }
         }
-
-
-
-
-
-
-
-        
-
-
-
-
-
-
 
         //0x30 Forward/Backwards movement speed (RW)
         //0x31 left/right movement speed (RW)
@@ -467,6 +448,51 @@ class Dog{
             }
             return read_data();                         
         }
+
+
+
+
+
+        void customGait(int delayTime,int gaitLength, int* arrX, int* arrY, int* arrZ)
+        {
+            int j=gaitLength/4;
+            int k=2*gaitLength/4;
+            int l=3*gaitLength/4;
+
+            //walk:LF, RH,RF,LH;
+            
+
+            for (int i = 0; i < gaitLength; i++)
+            {
+                if(j>=gaitLength)
+                {
+                    j=0;
+                }
+                if(k>=gaitLength)
+                {
+                    k=0;
+                }
+                if(l>=gaitLength)
+                {
+                    l=0;
+                }
+                setFootPosition(Limb::LEFT_FORE,arrX[i],arrY[i],arrZ[i]);
+                setFootPosition(Limb::RIGHT_FORE,arrX[k],arrY[i],arrZ[k]);
+                setFootPosition(Limb::LEFT_REAR,arrX[l],arrY[i],arrZ[l]);
+                setFootPosition(Limb::RIGHT_REAR,arrX[j],arrY[i],arrZ[j]);
+                j++;
+                k++;
+                l++;
+                delay(delayTime);
+            }
+        }
+
+
+
+
+
+
+
 
     private:
         long baud_rate = 115200;
